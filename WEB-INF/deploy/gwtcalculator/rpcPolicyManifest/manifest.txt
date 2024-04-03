@@ -1,0 +1,3 @@
+# Module gwtcalculator
+# RPC service class, partial path of RPC policy file
+com.gwtcalc.client.GreetingService, ED9F7AAA78DDF81CEDD6A3A974BC4C6A.gwt.rpc

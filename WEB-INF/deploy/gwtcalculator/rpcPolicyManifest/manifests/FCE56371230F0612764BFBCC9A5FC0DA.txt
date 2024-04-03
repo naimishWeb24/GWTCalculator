@@ -1,0 +1,2 @@
+serviceClass: com.gwtcalc.client.GreetingService
+path: ED9F7AAA78DDF81CEDD6A3A974BC4C6A.gwt.rpc
