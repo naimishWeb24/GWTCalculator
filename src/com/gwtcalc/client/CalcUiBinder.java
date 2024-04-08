@@ -1,5 +1,7 @@
 package com.gwtcalc.client;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -20,12 +22,12 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class CalcUiBinder extends Composite implements HasText {
 
-	private static CalcUiBinderUiBinder uiBinder = GWT.create(CalcUiBinderUiBinder.class);
+	private static CalcUiBinderUiBinder uiBinder = GWT.create(CalcUiBinderUiBinder.class);                    
 
-	interface CalcUiBinderUiBinder extends UiBinder<Widget, CalcUiBinder> {
+	interface CalcUiBinderUiBinder extends UiBinder<Widget, CalcUiBinder> {                       
 	}
 
-	@UiField VerticalPanel verticalPanel;
+	@UiField VerticalPanel verticalPanel;                                                                   
 	@UiField TextBox textBox;
 	@UiField Button btnClear;
 	@UiField Button btnOne;
@@ -45,18 +47,15 @@ public class CalcUiBinder extends Composite implements HasText {
 	@UiField Button btnZero;
 	@UiField Button btnDot;
 
-    private double firstValue = 0;
-    private double lastResult = 0;
-    private char lastOperator = ' ';
-
-    public CalcUiBinder() {
+	// Constructor
+    public CalcUiBinder() {																						
         initWidget(uiBinder.createAndBindUi(this));
         textBox.setFocus(true);
         ButtonClickHandlers();
         textBoxValidation();
     }
 
-    private void textBoxValidation() {
+    private void textBoxValidation() {																			 
 		textBox.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
@@ -67,33 +66,31 @@ public class CalcUiBinder extends Composite implements HasText {
 			}
 		});
 	
-		textBox.addKeyDownHandler(new KeyDownHandler() {
+		textBox.addKeyDownHandler(new KeyDownHandler() {														
 			@Override
 			public void onKeyDown(KeyDownEvent event) {
 				if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-					performOperation(lastOperator);
+					performOperation();
 				}
 			}
 		});
 	}
 
-	private void ButtonClickHandlers() {
+	private void ButtonClickHandlers() {                                                                         
         btnClear.addClickHandler(event -> {
-	            clearTextBox();
-	            firstValue = 0;
-	            lastOperator = ' ';
+	            clearTextBox();   
         });
   
         ClickHandler numberButton = event -> {
             Button button = (Button) event.getSource();
             String currentValue = textBox.getValue();
             
-            if (currentValue.length() < 10) {
+            if (currentValue.length() < 15) {
                 textBox.setValue(currentValue + button.getText());
             }
         };
-        
-        btnOne.addClickHandler(numberButton);
+        																										
+        btnOne.addClickHandler(numberButton);																		
         btnTwo.addClickHandler(numberButton);
         btnThree.addClickHandler(numberButton);
         btnFour.addClickHandler(numberButton);
@@ -111,69 +108,94 @@ public class CalcUiBinder extends Composite implements HasText {
         btnAns.addClickHandler(new ClickHandler() {
 	    	@Override
 			public void onClick(ClickEvent event) {
-	    		performOperation(lastOperator);
+	    		performOperation();
 	        }
         }); 
     }
 	
-    private void clearTextBox() {
+	// Clear-button Method
+    private void clearTextBox() {																						
         textBox.setText("");
     }
 		
-    native void console( String message) /*-{
+    native void console( String message) /*-{																			// native method for print data in console
     	console.log(message );
 	}-*/;
+    
+//    inbuilt eval method for evaluate , Calculate numbers     
+//    native double eval( String message) /*-{																			
+//		return eval(message);
+//	}-*/;
 
-    private void performOperation(char operator) {
-		String input = textBox.getText();
-		String[] parts = input.split("\\D+");
-    	
-    	double firstValue = Double.parseDouble(parts[0]);
-        double secondValue = Double.parseDouble(parts[1]);
-        char op = input.charAt(parts[0].length());
-        double result = 0;
-
-        switch (op) {
-            case '+':
-            	 console("fv :"  + firstValue);
-                 console("sv :"  + secondValue);
-                 console("operator "+ op);
-                result  = firstValue + secondValue;
-                console("result : "+ result);
-                break;
-            case '-':
-                result = firstValue - secondValue;
-                break;
-            case '*':
-                result = firstValue * secondValue;
-                break;
-            case '/':
-                if (secondValue != 0) {
-                    result = firstValue / secondValue;
-                } else {
-                    textBox.setValue("Cannot divide by zero");
-                    return;
-                }
-                break;
-            default:
-                result = secondValue;       
-        }
-        // Display result in the text box
-        firstValue = result;
-        lastResult = result;
-        textBox.setValue(String.valueOf(lastResult));
-        lastOperator = op;
+    private void performOperation() {																					
+    	double result = 0;
+    	try {
+				String input = textBox.getText(); 										
+				console("input String : "+ input);
+				//double answer = eval(input);
+				
+				String[] elements = input.split("[^0-9.]");
+				List<Double> values = new ArrayList<Double>();   							
+				for(int i=0; i<elements.length; i++) {
+					values.add(Double.parseDouble(elements[i]));
+				}
+				console("values" + values );
+				
+				List<Character> operators = new ArrayList<>();
+				for (char c : input.toCharArray()) {
+				    if (c == '+' || c == '-' || c == '*' || c == '/') {
+				        operators.add(c);
+				    }
+				}
+				console("operators:" + operators);
+				
+				// Perform multiplication and division first
+				for (int index = 0; index < operators.size(); index++) {
+					char operator = operators.get(index);
+					if (operator == '/' || operator == '*') {
+			             if (operator == '/') {
+			                 result = values.get(index) / values.get(index + 1);
+			             } else {
+			                 result = values.get(index) * values.get(index + 1);
+			             }
+			             values.set(index, result);
+			             values.remove(index + 1);
+			             operators.remove(index);
+			             index--;
+			             console("operators:" + operators);
+			             console("Values : " + values);
+					}
+				}
+		     
+				// Perform addition and subtraction
+				result = values.get(0);
+				for (int i = 0; i < operators.size(); i++) {
+					char operator = operators.get(i);
+		         
+					if (operator == '+') {
+						result += values.get(i + 1);
+					} else if (operator == '-') {
+			             result -= values.get(i + 1);
+					}
+					console("operators:" + operators);
+					console("Values : " + values);
+			     }
+				console("result : " + result);
+				textBox.setText(String.valueOf(result));
+			} catch (Exception e) {
+				textBox.setText("Malformed expression");
+			}
     }
 
 	@Override
 	public String getText() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void setText(String text) {
-		// TODO Auto-generated method stub
 		
 	}
+
+	
 }

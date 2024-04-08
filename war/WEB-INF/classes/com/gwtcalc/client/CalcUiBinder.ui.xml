@@ -25,8 +25,8 @@
 			margin: 2px;
 		}
          .buttons {
-            background-color: #008CBA; 
-            color: white;
+            background-color: 	#FFA500; 
+            color: black;
             padding: 20px 40px ;
             font-size: 16px;
             cursor: pointer;
@@ -34,15 +34,17 @@
             border-radius : 5px;
             margin : 2px 2px;
             font-size: 20px;
+            opacity : 0.8;
         }
         
         .buttons:hover, .btnAdd:hover, .btnDot:hover  {
-  			background-color: #4169E1;
+  			background-color: #FF8C00;
 		}
         
          .background {
 			border: 1px none transparent;
-   			background-color: #e7e7e7; 
+   			background-color: #e7e7e7;
+   			background : url('https://cdn.pixabay.com/photo/2019/11/06/10/40/fire-4605796_640.jpg'); 
    			color: black;
    			font-size: 11px;
    			padding-top: 80px;
@@ -54,7 +56,8 @@
 			box-shadow: 5px 10px 18px #888888;
     		top: 40%;
     		left: 50%;
-    		transform: translate(-50%, -50%); 		
+    		transform: translate(-50%, -50%); 
+    			
 		}
 		.textBox {
 			padding-top: 30px;
@@ -67,8 +70,8 @@
 			
 		}
 		.btnAdd {
-			background-color: #008CBA; 
-            color: white;
+			background-color: #FFA500; 
+            color: black;
             padding: 20px 37px ;
             font-size: 15px;
             cursor: pointer;
@@ -76,11 +79,12 @@
             border-radius : 5px;
             margin : 2px 2px;
             font-size: 20px;
+            opacity : 0.8;
 		}
 		
 		.btnDot {
-			background-color: #008CBA; 
-            color: white;
+			background-color:#FFA500 ; 
+            color: black;
             padding: 20px 43px ;
             font-size: 15px;
             cursor: pointer;
@@ -88,11 +92,12 @@
             border-radius : 5px;
             margin : 2px 2px;
             font-size: 20px;
+            opacity : 0.8;
 		}
 		.brandName {
 			font-size: 2em;
   			font-weight: bold;
-  			color: #777777;
+  			color: white;
   			margin:0px;
   			text-align-last: right;
 		}
